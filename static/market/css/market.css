@@ -112,6 +112,7 @@ footer .market .name {
 .market .main-content .content-wrapper ul li a .goods-img{
     display: block;
     width: 33.3%;
+    height: 96%;
     float: left;
 }
 .market .main-content .content-wrapper ul li a .goods-info{
@@ -190,7 +191,7 @@ footer .market .name {
     position: absolute;
     right: 0;
     bottom: 0;
-    display: none;
+    display: block;
 }
 .market .main-content .bounce-view .bounce-wrapper{
     background: white;
