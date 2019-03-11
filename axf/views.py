@@ -102,8 +102,25 @@ def mine(request):
 
 
 def login(request):
-    return render(request, 'mine/login.html')
+    if request.method == 'GET':
+        return render(request, 'mine/login.html')
+    if request.method == 'POST':
+        email=request.POST.get('email')
+        password=generate_password(request.POST.get('password'))
+        users=User.objects.filter(email=email)
+        if users.exists():
+            user=users.first()
+            if user.password == password:
+                token=generate_token()
+                cache.set(token,user.id,60*60*24)
+                request.session['token']=token
+                return redirect('axf:mine')
+            else:
+                return render(request,'mine/login.html',context={'ps_err':'密码错误'})
+        else:
+            return render(request, 'mine/login.html', context={'us_err': '用户不存在'})
 
+    return redirect('axf:mine')
 
 def logout(request):
     request.session.flush()
@@ -139,3 +156,16 @@ def register(request):
         cache.set(token, user.id, 60*60*24)
         request.session['token'] = token
         return redirect('axf:mine')
+
+
+def checkemail(request):
+    email=request.GET.get('email')
+    print(email)
+    users=User.objects.filter(email=email)
+    response_data={}
+    if users.exists():
+        response_data['msg']='已存在，不可用！'
+    else:
+        response_data['msg'] = '恭喜，可用'
+
+    return JsonResponse(response_data)

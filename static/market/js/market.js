@@ -17,6 +17,8 @@
 
 $(function () {
 
+    $('.market').width(innerWidth)
+
     var index = $.cookie('index')
     console.log(index)
     if (index) { // 有点击，有下标

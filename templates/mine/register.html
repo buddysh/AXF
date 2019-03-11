@@ -13,6 +13,7 @@
 {% endblock %}
 
 {% block extjs %}
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="{% static 'mine/js/registerr.js' %}"></script>
 {% endblock %}
 
@@ -27,19 +28,21 @@
         <form action="{% url 'axf:register' %}" method="post">
             {% csrf_token %}
 
-            <div class="input-group">
+            <div class="input-group" id="email-id">
                 <span class="input-group-addon">邮箱</span>
-                <input type="text" class="form-control" placeholder="邮箱.." name="email">
+                <input type="text" class="form-control" placeholder="邮箱.." name="email"
+                data-toggle="popover" data-placement="bottom"  id="email-t">
             </div>
 
-            <div class="input-group">
+            <div class="input-group" id="password-id">
                 <span class="input-group-addon">密码</span>
-                <input type="password" class="form-control" placeholder="密码" name="password">
+                <input type="password" class="form-control" placeholder="密码"
+                       name="password" data-toggle="popover" data-placement="bottom" id="pass-t">
             </div>
 
-            <div class="input-group">
+            <div class="input-group" id="password-id2">
                 <span class="input-group-addon">确认密码</span>
-                <input type="password" class="form-control" placeholder="密码">
+                <input type="password" class="form-control" placeholder="密码" data-toggle="popover" data-placement="bottom" id="pass-t2">
             </div>
 
             <div class="input-group">
@@ -49,5 +52,6 @@
 
             <input type="submit" value="注册" id="subButton">
         </form>
-    </div>
+
+     </div>
 {% endblock %}
