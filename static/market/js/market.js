@@ -20,7 +20,6 @@ $(function () {
     $('.market').width(innerWidth)
 
     var index = $.cookie('index')
-    console.log(index)
     if (index) { // 有点击，有下标
         $('.type-slider li').eq(index).addClass('active')
     } else {
@@ -94,5 +93,59 @@ $(function () {
 
         $('#catgory-bt i').removeClass('glyphicon glyphicon-chevron-up').addClass('glyphicon glyphicon-chevron-down')
     }
+
+
+    $('.bt-wrapper .num').each(function () {
+        var num = parseInt($(this).html())
+        if (num){
+            $(this).prev().show()
+            $(this).show()
+        }
+        else {
+            $(this).prev().hide()
+            $(this).hide()
+        }
+
+    })
+
+    //加操作
+    $('.bt-wrapper #plus').click(function () {
+
+        request_data={
+            'goodsid':$(this).attr('data-goodsid')
+        }
+
+        var $that=$(this)
+        console.log(request_data)
+        console.log('22222222222222222222')
+        $.get('/axf/addcart/',request_data,function(response) {
+            console.log(response)
+            if (response.status == -1){ // 未登录
+                // 设置cookie
+                $.cookie('back', 'market', {expires: 3, path: '/'})
+
+                window.open('/axf/login/', '_self')
+
+            } else  if (response.status ==1 ) { // 操作成功
+
+                $that.prev().html(response.number)
+
+                // 设置显示
+                $that.prev().show()
+                console.log($that.prev())
+                console.log(response.status)
+                $that.prev().prev().show()
+            }
+
+        })
+    })
+
+
+
+
+    $('.bt-wrapper #minus').click(function () {
+
+    })
+
 
 })

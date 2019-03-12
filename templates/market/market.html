@@ -68,9 +68,17 @@
 
                             </a>
                             <div class="bt-wrapper">
-                                <span class="glyphicon glyphicon-minus"></span>
-                                <i class="num">10</i>
-                                <span class="glyphicon glyphicon-plus" data-goodsid="{{ goods.id }}"></span>
+                                <span class="glyphicon glyphicon-minus" id="minus"></span>
+                                <i class="num">
+                                    {% for cart in carts %}
+{#                                    当前购物车记录的 goods.id#}
+                                        {% if goods.id == cart.goods.id %}
+                                            {{ cart.number}}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                </i>
+                                <span class="glyphicon glyphicon-plus" data-goodsid="{{ good.id }}" id="plus"></span>
                             </div>
                         </li>
 

@@ -3,9 +3,25 @@
 {% block title %}
 购物车
 {% endblock %}
-{% block content %}
-    购物车
+
+{% block extjs %}
+    <script src="{% static 'cart/js/cart.js' %}"></script>
 {% endblock %}
+
+
 {% block extcss %}
     <link rel="stylesheet" href="{% static 'cart/css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="cart">
+        <ul>
+            <li>
+
+            </li>
+        </ul>
+        <div class="bill">
+
+        </div>
+    </div>
 {% endblock %}

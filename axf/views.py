@@ -10,8 +10,9 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 
-from axf.models import Wheel, Nav, Mustbuy, Shop, Mainshow, Foodtypes, Goods, User
+from axf.models import Wheel, Nav, Mustbuy, Shop, Mainshow, Foodtypes, Goods, User, Cart
 
+from django.conf import settings
 
 def home(request):
     wheels=Wheel.objects.all()
@@ -22,6 +23,10 @@ def home(request):
     shopclasses=Shop.objects.all()[3:7]
     shopcommends=Shop.objects.all()[7:11]
     mainshows = Mainshow.objects.all()
+    # print('*************')
+    # print(settings.BASE_DIR)
+    # print(settings.CACHES)
+    # print('################')
     response_str={
         'wheels': wheels,
         'navs':navs,
@@ -73,6 +78,16 @@ def market(request,childid='0',sortid='0'):
             'child_typelist':child_typelist,
             'childid': childid
         }
+
+        # 获取购物车信息
+        token = request.session.get('token')
+        userid = cache.get(token)
+
+        if userid:
+            user = User.objects.get(pk=userid)
+            carts = user.cart_set.all()
+            context['carts'] = carts
+
         return render(request,'market/market.html',context=context)
     # if request.method == 'POST':
     #     foodtypes = Foodtypes.objects.values()
@@ -89,8 +104,6 @@ def cart(request):
     return render(request,'cart/cart.html')
 
 
-# def mine(request):
-#     return render(request,'mine/mine.html')
 
 def mine(request):
     token = request.session.get('token')
@@ -168,4 +181,37 @@ def checkemail(request):
     else:
         response_data['msg'] = '恭喜，可用'
 
+    return JsonResponse(response_data)
+
+
+def addcart(request):
+    token=request.session.get('token')
+    response_data={}
+
+    if token:
+        userid=cache.get(token)
+        if userid:
+            user=User.objects.get(pk=userid)
+            goodsid=request.GET.get('goodsid')
+            goods = Goods.objects.get(pk=goodsid)
+            carts = Cart.objects.filter(user=user).filter(goods=goods)
+
+            if carts.exists():
+                cart = carts.first()
+                cart.number=cart.number +1
+                cart.save()
+            else:
+                cart=Cart()
+                cart.user =user
+                cart.goods=goods
+                cart.number = 1
+                cart.save()
+
+            response_data['status'] =1
+            response_data['number'] = cart.number
+            response_data['msg'] = '添加 {} 购物车成功: {}'.format(cart.goods.productlongname, cart.number)
+
+        return JsonResponse(response_data)
+    response_data['status'] = -1
+    response_data['msg'] = '请登录后操作'
     return JsonResponse(response_data)
